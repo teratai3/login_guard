@@ -1,0 +1,40 @@
+<?php
+
+use Drupal\Core\Form\FormStateInterface;
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function login_guard_form_user_login_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $config = \Drupal::config('login_guard.settings');
+  $recaptcha_enabled = $config->get('recaptcha');
+  
+  if ($recaptcha_enabled) {
+    $form['captcha'] = [
+      '#type' => 'item',
+      '#markup' => '<img src="/captcha/image" alt="Captcha Image">',
+    ];
+    $form['captcha_input'] = [
+      '#type' => 'textfield',
+      '#title' => '上に表示された文字を入力してください',
+      '#required' => true,
+    ];
+  
+    $form['#validate'][] = 'login_guard_validate';
+  }
+}
+
+/**
+ * フックではない関数を定義する
+ */
+
+//ログインフォームのカスタム検証ハンドラー
+function login_guard_validate(array &$form, FormStateInterface $form_state) {
+  $session = \Drupal::service('session');
+  $captcha_input = $form_state->getValue('captcha_input');
+  $captcha_code = $session->get('captcha_code');
+
+  if (md5($captcha_input) !== $captcha_code) {
+    $form_state->setErrorByName('captcha_input','入力された文字が正しくありませんでした。もう一度試してください。');
+  }
+}

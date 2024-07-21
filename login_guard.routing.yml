@@ -1,0 +1,14 @@
+login_guard.captcha_image:
+  path: "/captcha/image"
+  defaults:
+    _controller: '\Drupal\login_guard\Controller\CaptchaController::generateCaptcha'
+  requirements:
+    _permission: "access content"
+
+login_guard_admin:
+  path: "/admin/config/login_guard"
+  defaults:
+    _title: "ログインガードの設定"
+    _form: '\Drupal\login_guard\Form\LoginGuardSettingsForm'
+  requirements:
+    _role: "administrator"

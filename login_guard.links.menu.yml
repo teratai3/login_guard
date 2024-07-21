@@ -1,0 +1,5 @@
+login_guard.settings:
+  title: 'ログインガードの設定'
+  description: 'ログインガードの設定'
+  parent: system.admin_config_system
+  route_name: login_guard_admin

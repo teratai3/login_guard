@@ -1,0 +1,16 @@
+services:
+  login_guard.captcha_controller:
+    class: Drupal\login_guard\Controller\CaptchaController
+    arguments: ["@session"]
+
+  login_guard.route_subscriber:
+    class: Drupal\login_guard\Routing\RouteSubscriber
+    arguments: ["@config.factory"]
+    tags:
+      - { name: event_subscriber }
+
+  login_guard.noindex_subscriber:
+    class: Drupal\login_guard\EventSubscriber\AddNoIndexHeader
+    arguments: ["@config.factory"]
+    tags:
+      - { name: event_subscriber }
